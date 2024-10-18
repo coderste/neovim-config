@@ -1,12 +1,5 @@
 local secrets = require("coderste.secrets")
 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "qf",
-  callback = function()
-    vim.api.nvim_buf_set_keymap(0, 'n', '<CR>', '<CR>:cclose<CR>', { noremap = true, silent = true })
-  end,
-})
-
 return {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -30,16 +23,18 @@ return {
             {},
             vim.lsp.protocol.make_client_capabilities(),
             cmp_lsp.default_capabilities())
- 
+
         require("fidget").setup({})
         require("mason").setup()
         require("mason-lspconfig").setup({
             ensure_installed = {
                 "lua_ls",
                 "gopls",
+                -- "phpactor",
                 "intelephense",
                 "pyright",
-                "ts_ls"
+                "ts_ls",
+                "terraformls",
             },
             handlers = {
                 function(server_name) -- default handler (optional)
@@ -48,16 +43,15 @@ return {
                     }
                 end,
 
-                ["phpactor"] = function()
-                    require("lspconfig").phpactor.setup {
-                        capabilities = capabilities,
-                        root_dir = require("lspconfig").util.root_pattern("composer.json", ".git"),
-                        init_options = {
-                            ["language_server_phpstan.enabled"] = false,
-                            ["language_server_psalm.enabled"] = false,
-                        }
-                    }
-                end,
+                -- ["phpactor"] = function()
+                --     require("lspconfig").phpactor.setup {
+                --         capabilities = capabilities,
+                --         init_options = {
+                --             ["language_server_phpstan.enabled"] = false,
+                --             ["language_server_psalm.enabled"] = false,
+                --         }
+                --     }
+                -- end,
 
                 ["intelephense"] = function()
                     require("lspconfig").intelephense.setup {
@@ -66,14 +60,24 @@ return {
                             intelephense = {
                                 licenceKey = secrets.intelephense_license_key,
                                 stubs = {
-                                    "apache", "bcmath", "bz2", "calendar", "com_dotnet", "Core", "ctype", "curl", "date",
-                                    "dba", "dom", "enchant", "exif", "FFI", "fileinfo", "filter", "fpm", "ftp", "gd", "gettext",
-                                    "gmp", "hash", "iconv", "imap", "intl", "json", "ldap", "libxml", "mbstring", "meta", "mysqli",
-                                    "oci8", "odbc", "openssl", "pcntl", "pcre", "PDO", "pdo_ibm", "pdo_mysql", "pdo_pgsql", "pdo_sqlite",
-                                    "pgsql", "Phar", "posix", "pspell", "readline", "Reflection", "session", "shmop", "SimpleXML", "snmp",
-                                    "soap", "sockets", "sodium", "SPL", "sqlite3", "standard", "superglobals", "sysvmsg", "sysvsem",
-                                    "sysvshm", "tidy", "tokenizer", "xml", "xmlreader", "xmlrpc", "xmlwriter", "xsl", "Zend OPcache",
-                                    "zip", "zlib"
+                                    "apache", "bcmath", "bz2", "calendar", "com_dotnet", "Core", "curl", "date",
+                                    "dba", "dom", "enchant", "fileinfo", "filter", "ftp", "gd", "gettext",
+                                    "hash", "iconv", "imap", "intl", "json", "ldap", "libxml", "mbstring",
+                                    "mcrypt", "mysql", "mysqli", "password", "pcntl", "pcre", "PDO",
+                                    "pdo_mysql", "Phar", "readline", "recode", "Reflection", "regex",
+                                    "session", "SimpleXML", "soap", "sockets", "sodium", "SPL", "standard",
+                                    "superglobals", "sysvmsg", "sysvsem", "sysvshm", "tidy", "tokenizer",
+                                    "xml", "xdebug", "xmlreader", "xmlrpc", "xmlwriter", "xsl", "Zend OPcache",
+                                    "zip", "zlib",
+                                    "laravel", "phpstan", "pint"
+                                },
+                                environment = {
+                                    includePaths = {
+                                        vim.fn.getcwd() .. '/vendor/laravel/framework/src'
+                                    }
+                                },
+                                files = {
+                                    maxSize = 5000000,
                                 },
                             }
                         }
