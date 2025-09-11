@@ -4,7 +4,15 @@ return {
         opts = {
             formatters_by_ft = {
                 php = { "pint" },
-                terraform = { "terraform_fmt" }
+                terraform = { "terraform_fmt" },
+                typescript = { "prettier" },
+                typescriptreact = { "prettier" },
+                javascript = { "prettier" },
+                javascriptreact = { "prettier" },
+            },
+            format_on_save = {
+                timeout_ms = 2500,
+                lsp_fallback = true
             },
             formatters = {
                 pint = {
@@ -30,9 +38,9 @@ return {
 
             -- Optional: Set up format-on-save
             vim.api.nvim_create_autocmd("BufWritePre", {
-                pattern = "*.php, *.tf",
+                pattern = "*.php,*.tf,*.tsx,*.ts,*.js,*.jsx",
                 callback = function(args)
-                    require("conform").format({ bufnr = args.buf })
+                    require("conform").format({ bufnr = args.buf, async = true })
                 end,
             })
 
@@ -40,8 +48,8 @@ return {
             vim.keymap.set("n", "<leader>fmt", function()
                 require("conform").format({
                     lsp_fallback = true,
-                    async = false,
-                    timeout_ms = 500,
+                    async = true,
+                    timeout_ms = 2500,
                 })
             end, { desc = "Format file" })
         end,
