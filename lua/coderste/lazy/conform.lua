@@ -21,7 +21,7 @@ return {
                         description = "Laravel Pint is an opinionated PHP code style fixer for minimalists. Pint is built on top of PHP-CS-Fixer and makes it simple to ensure that your code style stays clean and consistent.",
                     },
                     command = "pint",
-                    args = { "--config", "pint.json" },  -- Optional: if you have a custom Pint config
+                    args = { "$FILENAME", "--config", "pint.json" },  -- Optional: if you have a custom Pint config
                 },
                 terraform_fmt = {
                     meta = {
