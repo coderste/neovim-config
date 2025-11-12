@@ -47,6 +47,23 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+vim.api.nvim_create_user_command("CleanLogJson", function()
+  -- Replace \n with actual newlines
+  vim.cmd([[%s/\\n/\r/g]])
+  -- Unescape quotes
+  vim.cmd([[%s/\\"/"/g]])
+  -- Fix missing colons between key/value pairs ("key" "value" → "key": "value")
+  vim.cmd([[%s/" \+"/": "/g]])
+
+  local jq_path = vim.fn.exepath("jq")
+  if jq_path ~= "" then
+    vim.cmd([[%!jq .]])
+  else
+    print("Note: jq not found, skipped pretty formatting.")
+  end
+end, { desc = "Clean and pretty-print escaped JSON log output" })
+
+
 vim.g.netrw_browse_split = 0
 vim.g.netrw_banner = 0
 vim.g.netrw_winsize = 25

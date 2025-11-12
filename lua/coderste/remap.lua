@@ -18,6 +18,9 @@ vim.keymap.set("x", "<leader>p", [["_dP]])
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
 
+-- the best for cleaning logs from Grafana
+vim.keymap.set("n", "<leader>cl", ":CleanLogJson<CR>", { desc = "Clean escaped JSON log" })
+
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
 -- This is going to get me cancelled
