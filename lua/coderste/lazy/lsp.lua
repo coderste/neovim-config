@@ -2,40 +2,21 @@ local secrets = require("coderste.secrets")
 
 return {
     "neovim/nvim-lspconfig",
-    dependencies = {
-        "williamboman/mason.nvim",
-        "williamboman/mason-lspconfig.nvim",
-        "hrsh7th/cmp-nvim-lsp",
-        "hrsh7th/cmp-buffer",
-        "hrsh7th/cmp-path",
-        "hrsh7th/cmp-cmdline",
-        "hrsh7th/nvim-cmp",
-        "L3MON4D3/LuaSnip",
-        "saadparwaiz1/cmp_luasnip",
-        "j-hui/fidget.nvim",
-    },
+    dependencies = { "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim", "hrsh7th/cmp-nvim-lsp",
+        "hrsh7th/cmp-buffer", "hrsh7th/cmp-path", "hrsh7th/cmp-cmdline", "hrsh7th/nvim-cmp",
+        "L3MON4D3/LuaSnip", "saadparwaiz1/cmp_luasnip", "j-hui/fidget.nvim" },
 
     config = function()
         local cmp = require('cmp')
         local cmp_lsp = require("cmp_nvim_lsp")
-        local capabilities = vim.tbl_deep_extend(
-            "force",
-            {},
-            vim.lsp.protocol.make_client_capabilities(),
+        local capabilities = vim.tbl_deep_extend("force", {}, vim.lsp.protocol.make_client_capabilities(),
             cmp_lsp.default_capabilities())
 
         require("fidget").setup({})
         require("mason").setup()
         require("mason-lspconfig").setup({
-            ensure_installed = {
-                "lua_ls",
-                "gopls",
-                -- "phpactor",
-                "intelephense",
-                "pyright",
-                "ts_ls",
-                "terraformls",
-            },
+            ensure_installed = { "lua_ls", "gopls", -- "phpactor",
+                "intelephense", "pyright", "ts_ls", "terraformls" },
             handlers = {
                 function(server_name) -- default handler (optional)
                     require("lspconfig")[server_name].setup {
@@ -59,26 +40,20 @@ return {
                         settings = {
                             intelephense = {
                                 licenceKey = secrets.intelephense_license_key,
-                                stubs = {
-                                    "apache", "bcmath", "bz2", "calendar", "com_dotnet", "Core", "curl", "date",
-                                    "dba", "dom", "enchant", "fileinfo", "filter", "ftp", "gd", "gettext",
-                                    "hash", "iconv", "imap", "intl", "json", "ldap", "libxml", "mbstring",
-                                    "mcrypt", "mysql", "mysqli", "password", "pcntl", "pcre", "PDO",
-                                    "pdo_mysql", "Phar", "readline", "recode", "Reflection", "regex",
-                                    "session", "SimpleXML", "soap", "sockets", "sodium", "SPL", "standard",
-                                    "superglobals", "sysvmsg", "sysvsem", "sysvshm", "tidy", "tokenizer",
-                                    "xml", "xdebug", "xmlreader", "xmlrpc", "xmlwriter", "xsl", "Zend OPcache",
-                                    "zip", "zlib",
-                                    "laravel", "phpstan", "pint"
-                                },
+                                stubs = { "apache", "bcmath", "bz2", "calendar", "com_dotnet", "Core", "curl", "date",
+                                    "dba", "dom", "enchant", "fileinfo", "filter", "ftp", "gd", "gettext", "hash",
+                                    "iconv", "imap", "intl", "json", "ldap", "libxml", "mbstring", "mcrypt",
+                                    "mysql", "mysqli", "password", "pcntl", "pcre", "PDO", "pdo_mysql", "Phar",
+                                    "readline", "recode", "Reflection", "regex", "session", "SimpleXML", "soap",
+                                    "sockets", "sodium", "SPL", "standard", "superglobals", "sysvmsg", "sysvsem",
+                                    "sysvshm", "tidy", "tokenizer", "xml", "xdebug", "xmlreader", "xmlrpc",
+                                    "xmlwriter", "xsl", "Zend OPcache", "zip", "zlib", "laravel", "phpstan", "pint" },
                                 environment = {
-                                    includePaths = {
-                                        vim.fn.getcwd() .. '/vendor/laravel/framework/src'
-                                    }
+                                    includePaths = { vim.fn.getcwd() .. '/vendor/laravel/framework/src' }
                                 },
                                 files = {
-                                    maxSize = 5000000,
-                                },
+                                    maxSize = 5000000
+                                }
                             }
                         }
                     }
@@ -90,31 +65,37 @@ return {
                         capabilities = capabilities,
                         settings = {
                             Lua = {
-                                runtime = { version = "Lua 5.1" },
+                                runtime = {
+                                    version = "LuaJIT"
+                                },
                                 diagnostics = {
-                                    globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
-                                }
+                                    globals = { "bit", "vim", "it", "describe", "before_each", "after_each" }
+                                },
                             }
                         }
                     }
-                end,
+                end
             }
         })
 
-        local cmp_select = { behavior = cmp.SelectBehavior.Select }
+        local cmp_select = {
+            behavior = cmp.SelectBehavior.Select
+        }
 
         cmp.setup({
             snippet = {
                 expand = function(args)
                     vim.snippet.expand(args.body)
-                end,
+                end
             },
             mapping = cmp.mapping.preset.insert({
                 ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
                 ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
                 ["<C-Space>"] = cmp.mapping.complete(),
                 ['<C-e>'] = cmp.mapping.abort(),
-                ['<CR>'] = cmp.mapping.confirm({ select = true }),
+                ['<CR>'] = cmp.mapping.confirm({
+                    select = true
+                }),
                 ['<Tab>'] = cmp.mapping(function(fallback)
                     if cmp.visible() then
                         cmp.select_next_item()
@@ -128,11 +109,11 @@ return {
                     else
                         fallback()
                     end
-                end, { 'i', 's' }),
+                end, { 'i', 's' })
             }),
-            sources = cmp.config.sources({
-                { name = 'nvim_lsp' },
-            })
+            sources = cmp.config.sources({ {
+                name = 'nvim_lsp'
+            } })
         })
 
         vim.diagnostic.config({
@@ -143,8 +124,8 @@ return {
                 border = "rounded",
                 source = "always",
                 header = "",
-                prefix = "",
-            },
+                prefix = ""
+            }
         })
     end
 }

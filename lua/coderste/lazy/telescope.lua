@@ -3,15 +3,13 @@ return {
 
     tag = "0.1.5",
 
-    dependencies = {
-        "nvim-lua/plenary.nvim"
-    },
+    dependencies = {"nvim-lua/plenary.nvim"},
 
     config = function()
         require('telescope').setup({
             defaults = {
-                file_ignore_patterns = { "%.DS_Store" },
-                hidden = true,
+                file_ignore_patterns = {"%.DS_Store"},
+                hidden = true
             }
         })
 
@@ -20,14 +18,20 @@ return {
         vim.keymap.set('n', '<C-p>', builtin.git_files, {})
         vim.keymap.set('n', '<leader>pws', function()
             local word = vim.fn.expand("<cword>")
-            builtin.grep_string({ search = word })
+            builtin.grep_string({
+                search = word
+            })
         end)
         vim.keymap.set('n', '<leader>pWs', function()
             local word = vim.fn.expand("<cWORD>")
-            builtin.grep_string({ search = word })
+            builtin.grep_string({
+                search = word
+            })
         end)
         vim.keymap.set('n', '<leader>ps', function()
-            builtin.grep_string({ search = vim.fn.input("Grep > ") })
+            builtin.grep_string({
+                search = vim.fn.input("Grep > ")
+            })
         end)
         vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})
     end

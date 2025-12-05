@@ -16,53 +16,84 @@ autocmd('TextYankPost', {
     callback = function()
         vim.highlight.on_yank({
             higroup = 'IncSearch',
-            timeout = 40,
+            timeout = 40
         })
-    end,
+    end
 })
 
 autocmd('LspAttach', {
     group = Coderste,
     callback = function(e)
-        local opts = { buffer = e.buf }
-        vim.keymap.set("n", "gr", function() vim.lsp.buf.references() end, opts)
-        vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-        vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-        vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-        vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-        vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-        vim.keymap.set("n", "<leader>vfr", function() vim.lsp.buf.references() end, opts)
-        vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-        vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-        vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-        vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-        vim.keymap.set('n', '<BS>', '<C-o>', { noremap = true, silent = true })
+        local opts = {
+            buffer = e.buf
+        }
+        vim.keymap.set("n", "gr", function()
+            vim.lsp.buf.references()
+        end, opts)
+        vim.keymap.set("n", "gd", function()
+            vim.lsp.buf.definition()
+        end, opts)
+        vim.keymap.set("n", "K", function()
+            vim.lsp.buf.hover()
+        end, opts)
+        vim.keymap.set("n", "<leader>vws", function()
+            vim.lsp.buf.workspace_symbol()
+        end, opts)
+        vim.keymap.set("n", "<leader>vd", function()
+            vim.diagnostic.open_float()
+        end, opts)
+        vim.keymap.set("n", "<leader>vca", function()
+            vim.lsp.buf.code_action()
+        end, opts)
+        vim.keymap.set("n", "<leader>vfr", function()
+            vim.lsp.buf.references()
+        end, opts)
+        vim.keymap.set("n", "<leader>vrn", function()
+            vim.lsp.buf.rename()
+        end, opts)
+        vim.keymap.set("i", "<C-h>", function()
+            vim.lsp.buf.signature_help()
+        end, opts)
+        vim.keymap.set("n", "[d", function()
+            vim.diagnostic.goto_next()
+        end, opts)
+        vim.keymap.set("n", "]d", function()
+            vim.diagnostic.goto_prev()
+        end, opts)
+        vim.keymap.set('n', '<BS>', '<C-o>', {
+            noremap = true,
+            silent = true
+        })
     end
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "qf",
-  callback = function()
-    vim.api.nvim_buf_set_keymap(0, 'n', '<CR>', '<CR>:cclose<CR>', { noremap = true, silent = true })
-  end,
+    pattern = "qf",
+    callback = function()
+        vim.api.nvim_buf_set_keymap(0, 'n', '<CR>', '<CR>:cclose<CR>', {
+            noremap = true,
+            silent = true
+        })
+    end
 })
 
 vim.api.nvim_create_user_command("CleanLogJson", function()
-  -- Replace \n with actual newlines
-  vim.cmd([[%s/\\n/\r/g]])
-  -- Unescape quotes
-  vim.cmd([[%s/\\"/"/g]])
-  -- Fix missing colons between key/value pairs ("key" "value" → "key": "value")
-  vim.cmd([[%s/" \+"/": "/g]])
+    -- Replace \n with actual newlines
+    vim.cmd([[%s/\\n/\r/g]])
+    -- Unescape quotes
+    vim.cmd([[%s/\\"/"/g]])
+    -- Fix missing colons between key/value pairs ("key" "value" → "key": "value")
+    vim.cmd([[%s/" \+"/": "/g]])
 
-  local jq_path = vim.fn.exepath("jq")
-  if jq_path ~= "" then
-    vim.cmd([[%!jq .]])
-  else
-    print("Note: jq not found, skipped pretty formatting.")
-  end
-end, { desc = "Clean and pretty-print escaped JSON log output" })
-
+    local jq_path = vim.fn.exepath("jq")
+    if jq_path ~= "" then
+        vim.cmd([[%!jq .]])
+    else
+        print("Note: jq not found, skipped pretty formatting.")
+    end
+end, {
+    desc = "Clean and pretty-print escaped JSON log output"
+})
 
 vim.g.netrw_browse_split = 0
 vim.g.netrw_banner = 0
