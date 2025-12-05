@@ -34,6 +34,12 @@ return {
             })
         end)
         vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})
+        vim.keymap.set('n', '<leader>pg', builtin.live_grep, {
+            desc = "Live grep"
+        })
+        vim.keymap.set('n', '<leader>pb', builtin.buffers, {
+            desc = "Find buffers"
+        })
     end
 }
 
